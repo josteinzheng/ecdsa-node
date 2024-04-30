@@ -7,14 +7,14 @@ app.use(cors());
 app.use(express.json());
 
 const balances = {
-  "0x1": 100,
-  "0x2": 50,
-  "0x3": 75,
+  "03fe126c6fe2f1c97dd9f5c8e8b7c8c5c6c63a8216b424a48886c392d89e8231dd": 999,
+  "02c5f763bd293ffa83b5a8b50dbc32811a402a72c3bb569e5d07f3cdfa90790465": 50,
+  "02b3a46abac6f033b536dadd938b23a463777133ef16dbb4822cc8cde93d1561d7": 75,
 };
 
 app.get("/balance/:address", (req, res) => {
   const { address } = req.params;
-  const balance = balances[address] || 0;
+  const balance = balances[address.toLowerCase()] || 0;
   res.send({ balance });
 });
 
