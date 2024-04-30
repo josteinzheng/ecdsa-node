@@ -1,4 +1,6 @@
 const express = require("express");
+const secp  = require("ethereum-cryptography/secp256k1").secp256k1;
+const {toHex, hexToBytes, utf8ToBytes} = require('ethereum-cryptography/utils');
 const app = express();
 const cors = require("cors");
 const port = 3042;
@@ -19,8 +21,12 @@ app.get("/balance/:address", (req, res) => {
 });
 
 app.post("/send", (req, res) => {
-  const { sender, recipient, amount } = req.body;
-
+  const { sender, recipient, amount, signature } = req.body;
+  const msg = utf8ToBytes(sender + amount + recipient);
+  let verifyResult = secp.verify(signature, msg, sender);
+  if (!verifyResult) {
+    res.status(401).send({message: "invalid signature."});
+  }
   setInitialBalance(sender);
   setInitialBalance(recipient);
 
